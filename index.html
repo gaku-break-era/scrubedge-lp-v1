@@ -90,38 +90,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .fv{
   position:relative;
   padding:140px 0 100px;
-  background:linear-gradient(to bottom,#ffffff 0%,#eef4fb 100%);
+  background:radial-gradient(ellipse 90% 80% at 75% 50%,#ffffff 0%,#ffffff 35%,#f4f8fc 70%,#e6eef7 100%);
   overflow:hidden;
 }
-.fv-blob{
-  position:absolute;border-radius:50%;
-  filter:blur(60px);opacity:.5;z-index:0;
-  animation:blob 20s ease-in-out infinite;
-}
-.fv-blob-1{
-  width:500px;height:500px;
-  background:radial-gradient(circle,rgba(30,197,201,.4) 0%,transparent 70%);
-  top:-100px;right:-100px;
-}
-.fv-blob-2{
-  width:400px;height:400px;
-  background:radial-gradient(circle,rgba(21,74,181,.3) 0%,transparent 70%);
-  bottom:-100px;left:-100px;
-  animation-delay:-10s;
-}
-@keyframes blob{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%{transform:translate(30px,-50px) scale(1.1)}
-  66%{transform:translate(-20px,20px) scale(.95)}
-}
-.fv-grid-bg{
-  position:absolute;inset:0;z-index:0;opacity:.4;
-  background-image:
-    linear-gradient(rgba(15,42,71,.06) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(15,42,71,.06) 1px,transparent 1px);
-  background-size:50px 50px;
-  mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
-  -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+@media(max-width:900px){
+  .fv{
+    background:radial-gradient(ellipse 110% 60% at 50% 22%,#ffffff 0%,#ffffff 35%,#f4f8fc 70%,#e6eef7 100%);
+  }
 }
 .fv-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 1fr;gap:70px;align-items:center}
 .fv-badge{
@@ -1500,9 +1475,6 @@ section{padding:100px 0;position:relative}
 
 <!-- FV -->
 <section class="fv" id="top">
-  <div class="fv-blob fv-blob-1"></div>
-  <div class="fv-blob fv-blob-2"></div>
-  <div class="fv-grid-bg"></div>
   <div class="container fv-inner">
     <div class="fv-text">
       <span class="fv-badge">手術室特化型 業務支援システム</span>
