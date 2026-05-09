@@ -90,10 +90,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .fv{
   position:relative;
   padding:140px 0 100px;
-  background:
-    radial-gradient(ellipse at top right,rgba(30,197,201,.18) 0%,transparent 50%),
-    radial-gradient(ellipse at bottom left,rgba(34,211,168,.12) 0%,transparent 50%),
-    linear-gradient(135deg,#f0f7fa 0%,#e6f1f6 100%);
+  background:linear-gradient(to bottom,#ffffff 0%,#eef4fb 100%);
   overflow:hidden;
 }
 .fv-blob{
@@ -226,21 +223,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   animation:fadeInRight 1.2s ease .3s both;
 }
 @keyframes fadeInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-.fv-image{
-  position:relative;
-  border-radius:var(--radius-lg);
-  overflow:hidden;
-  box-shadow:var(--shadow-lg);
-  transform:perspective(1000px) rotateY(-4deg) rotateX(2deg);
-  transition:transform .6s ease;
-}
-.fv-image:hover{transform:perspective(1000px) rotateY(-2deg) rotateX(1deg)}
+.fv-image{position:relative}
 .fv-image img{width:100%;display:block}
-.fv-image::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(13,110,122,.1) 0%,transparent 50%);
-  pointer-events:none;
-}
 .float-card{
   position:absolute;background:#fff;
   border-radius:14px;padding:14px 18px;
