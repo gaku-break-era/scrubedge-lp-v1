@@ -2325,11 +2325,11 @@ document.getElementById('contactForm').addEventListener('submit',async function(
   btn.disabled=true;
   btn.textContent='送信中…';
   try{
-    const res=await fetch(FORM_ENDPOINT,{
+    await fetch(FORM_ENDPOINT,{
       method:'POST',
+      mode:'no-cors',
       body:new URLSearchParams(new FormData(form))
     });
-    if(!res.ok) throw new Error('HTTP '+res.status);
     form.style.display='none';
     document.getElementById('formSuccess').classList.add('show');
     window.scrollTo({top:document.getElementById('contact').offsetTop-40,behavior:'smooth'});
