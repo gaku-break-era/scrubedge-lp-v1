@@ -1100,6 +1100,38 @@ section{padding:100px 0;position:relative}
   display:flex;gap:12px;align-items:flex-start;
   max-width:1080px;margin:0 auto;
 }
+
+/* ROI CTA card */
+.roi-cta-card{
+  max-width:1080px;margin:24px auto 0;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--primary) 100%);
+  border-radius:var(--radius);
+  padding:28px 32px;
+  display:flex;gap:24px;align-items:center;justify-content:space-between;
+  box-shadow:0 14px 40px rgba(30,58,138,.18);
+  color:#fff;flex-wrap:wrap;
+}
+.roi-cta-card .roi-cta-text h3{
+  font-size:19px;font-weight:800;margin-bottom:6px;color:#fff;line-height:1.4;
+}
+.roi-cta-card .roi-cta-text p{
+  font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.85);max-width:560px;
+}
+.roi-cta-card .roi-cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 24px;border-radius:999px;
+  background:#fff;color:var(--navy);
+  font-weight:800;font-size:14px;white-space:nowrap;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;
+}
+.roi-cta-card .roi-cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.25)}
+@media(max-width:640px){
+  .roi-cta-card{padding:22px 20px;gap:16px}
+  .roi-cta-card .roi-cta-text h3{font-size:16px}
+  .roi-cta-card .roi-cta-text p{font-size:12.5px}
+  .roi-cta-card .roi-cta-btn{padding:12px 20px;font-size:13px;width:100%;justify-content:center}
+}
 .pricing-note-icon{
   flex-shrink:0;width:24px;height:24px;border-radius:50%;
   background:var(--text-sub);color:#fff;
@@ -2152,6 +2184,14 @@ section{padding:100px 0;position:relative}
       <span class="pricing-note-icon">i</span>
       <div>表示価格はすべて税抜です。<br>導入支援・カスタマイズをご希望の場合は、別途お見積りいたします。詳しくはお問い合わせください。</div>
     </div>
+
+    <div class="roi-cta-card reveal">
+      <div class="roi-cta-text">
+        <h3>あなたの施設での投資回収はいつ？</h3>
+        <p>施設規模を選ぶだけで、年間の経済効果・投資回収期間・ROIを試算できます。シフト作成・配置調整・残業・離職防止・教育管理・稼働向上の合計効果を金額化。</p>
+      </div>
+      <a href="roi-simulator.html" class="roi-cta-btn">投資回収シミュレーションを試す →</a>
+    </div>
   </div>
 </section>
 
@@ -2554,5 +2594,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show'))close()});
 })();
 </script>
+<script src="analytics.js" defer></script>
 </body>
 </html>

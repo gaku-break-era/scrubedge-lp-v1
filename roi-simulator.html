@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投資回収シミュレーション｜ScrubEdge</title>
+<meta name="description" content="ScrubEdge（スクラブエッジ）導入による年間経済効果を、施設規模を選ぶだけで試算できます。シフト作成・配置調整・残業・離職防止・教育管理・稼働向上の合計効果を金額化。">
+<link rel="canonical" href="https://scrubedge.com/roi-simulator.html">
+<style>
+  /* ===== Page chrome (header/footer shared with terms/privacy/contact) ===== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --page-navy:#1e3a8a;--page-navy-deep:#0f1f4d;
+    --page-primary:#2563eb;--page-primary-light:#3b82f6;
+    --page-text:#1a2b42;--page-text-sub:#5a6b80;
+    --page-border:#dde6ee;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",sans-serif;
+    color:var(--page-text);background:#fff;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--page-primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .legal-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--page-border)}
+  .legal-header-inner{
+    max-width:1240px;margin:0 auto;padding:18px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .legal-logo{font-weight:800;font-size:20px;color:var(--page-navy);letter-spacing:-.02em}
+  .legal-logo span{
+    background:linear-gradient(135deg,var(--page-navy) 0%,var(--page-primary) 60%,var(--page-primary-light) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .legal-back{font-size:13px;color:var(--page-text-sub);font-weight:600}
+  .legal-back:hover{color:var(--page-primary);text-decoration:none}
+  .legal-footer{
+    background:var(--page-navy-deep);color:rgba(255,255,255,.7);
+    padding:40px 24px 28px;text-align:center;font-size:13px;
+  }
+  .legal-footer a{color:rgba(255,255,255,.8)}
+  .legal-footer a:hover{color:#fff;text-decoration:underline}
+  .legal-footer-links{
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+    gap:6px 18px;margin-bottom:18px;
+  }
+  .legal-footer-sep{color:rgba(255,255,255,.25);font-size:11px}
+  .legal-copy{font-size:12px;opacity:.6;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);max-width:1240px;margin:0 auto}
+
+  /* ===========================================
+     ScrubEdge ROI Simulator - Scoped Styles
+     =========================================== */
+
+  #scrubedge-roi-simulator {
+    --se-navy-deep: #0f1f48;
+    --se-navy: #1a3068;
+    --se-navy-light: #2a4580;
+    --se-blue: #2e5fb5;
+    --se-mint: #14b8a6;
+    --se-mint-deep: #0f766e;
+    --se-text: #1a2332;
+    --se-text-muted: #5a6678;
+    --se-text-soft: #8995a8;
+    --se-border: #d8dee8;
+    --se-border-soft: #e8edf5;
+    --se-bg-soft: #f5f7fb;
+    --se-bg-card: #f8fafd;
+    --se-bg-mint: #ecfdf5;
+    --se-bg-navy: #eef1f8;
+    --se-warning: #b45309;
+
+    /* リセット & 基本 */
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    color: var(--se-text);
+    line-height: 1.7;
+    font-size: 15px;
+    background: linear-gradient(180deg, #f5f8ff 0%, #ffffff 50%, #f7fdfb 100%);
+    padding: 40px 16px 60px;
+  }
+
+  #scrubedge-roi-simulator *,
+  #scrubedge-roi-simulator *::before,
+  #scrubedge-roi-simulator *::after {
+    box-sizing: border-box;
+  }
+
+  /* ===== ヒーロー ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-hero {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 32px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--se-navy) 0%, var(--se-navy-light) 100%);
+    color: white;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-title {
+    margin: 0;
+    font-size: clamp(24px, 4.5vw, 36px);
+    color: var(--se-navy-deep);
+    line-height: 1.35;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-lead {
+    max-width: 720px;
+    margin: 16px auto 0;
+    color: var(--se-text-muted);
+    font-size: 15px;
+    line-height: 1.85;
+  }
+
+  /* ===== レイアウト ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-container {
+    width: min(1200px, 100%);
+    margin: 24px auto 0;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 22px;
+    align-items: start;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-panel,
+  #scrubedge-roi-simulator .scrubedge-roi-result {
+    background: white;
+    border: 1px solid var(--se-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(15, 31, 72, 0.06);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-panel {
+    padding: 24px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-result {
+    padding: 24px;
+    position: sticky;
+    top: 20px;
+  }
+
+  /* ===== セクション ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-section {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--se-border-soft);
+  }
+  #scrubedge-roi-simulator .scrubedge-roi-section:first-of-type { padding-top: 0; }
+  #scrubedge-roi-simulator .scrubedge-roi-section:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-section-title {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--se-navy);
+    padding-left: 10px;
+    border-left: 3px solid var(--se-navy);
+    line-height: 1.3;
+  }
+
+  /* ===== シナリオ切替 ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-scenario {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 6px;
+    background: var(--se-bg-soft);
+    border-radius: 14px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-scenario-btn {
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
+    padding: 10px 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--se-text-muted);
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-scenario-btn:hover {
+    color: var(--se-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-scenario-btn.is-active {
+    background: white;
+    color: var(--se-navy);
+    box-shadow: 0 2px 8px rgba(15, 31, 72, 0.1);
+  }
+
+  /* ===== プリセット表示 ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-preset {
+    background: var(--se-bg-navy);
+    border: 1px solid #c8d3e8;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-preset-title {
+    font-weight: 800;
+    color: var(--se-navy);
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-rate-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-rate-item {
+    background: white;
+    border: 1px solid #d8e0ee;
+    border-radius: 8px;
+    padding: 7px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--se-text-muted);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-rate-item strong {
+    color: var(--se-navy);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-preset-hint {
+    display: block;
+    font-size: 11px;
+    color: var(--se-text-muted);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* ===== 入力グリッド ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-field-wide {
+    grid-column: 1 / -1;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--se-text);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-unit {
+    color: var(--se-text-soft);
+    font-weight: 500;
+    margin-left: 4px;
+    font-size: 11px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cfd8e8;
+    border-radius: 10px;
+    background: white;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--se-navy);
+    outline: none;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-input::-webkit-outer-spin-button,
+  #scrubedge-roi-simulator .scrubedge-roi-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-input:hover {
+    border-color: #a8b5ce;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-input:focus {
+    border-color: var(--se-navy);
+    box-shadow: 0 0 0 3px rgba(26, 48, 104, 0.12);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-hint {
+    display: block;
+    font-size: 11px;
+    color: var(--se-text-soft);
+    line-height: 1.5;
+    margin-top: 5px;
+  }
+
+  /* ===== トグル ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: var(--se-bg-mint);
+    border: 1px solid #99e8d4;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-toggle-text strong {
+    display: block;
+    color: var(--se-mint-deep);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-toggle-text span {
+    font-size: 11px;
+    color: var(--se-text-muted);
+    line-height: 1.5;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-checkbox {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--se-mint-deep);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* ===== 計算式表示 ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-formula {
+    font-size: 11px;
+    color: var(--se-text-muted);
+    background: var(--se-bg-soft);
+    border: 1px dashed #c8d3e0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    line-height: 1.7;
+    margin-top: 4px;
+  }
+
+  /* ===== 結果カード ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-result-title {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--se-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-main-metric {
+    background: linear-gradient(135deg, var(--se-navy-deep) 0%, var(--se-navy) 60%, var(--se-navy-light) 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-main-metric::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-main-label {
+    display: block;
+    font-size: 12px;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    position: relative;
+    z-index: 1;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-main-value {
+    display: block;
+    font-size: clamp(28px, 5vw, 38px);
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== サブメトリクス ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-metric {
+    background: var(--se-bg-card);
+    border: 1px solid var(--se-border-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-metric-value {
+    display: block;
+    color: var(--se-navy);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  /* ===== サマリー文 ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-summary {
+    background: var(--se-bg-mint);
+    border: 1px solid #99e8d4;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--se-mint-deep);
+    line-height: 1.75;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== モード切替タブ ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: min(560px, 100%);
+    margin: 0 auto 24px;
+    background: white;
+    border: 1px solid var(--se-border);
+    border-radius: 14px;
+    padding: 5px;
+    box-shadow: 0 4px 16px rgba(15, 31, 72, 0.06);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-tab {
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
+    padding: 11px 14px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--se-text-muted);
+    transition: all 0.15s ease;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-tab:hover {
+    color: var(--se-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-tab.is-active {
+    background: linear-gradient(135deg, var(--se-navy) 0%, var(--se-navy-light) 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(15, 31, 72, 0.2);
+  }
+
+  /* ===== 簡易版モード ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-simple-only,
+  #scrubedge-roi-simulator .scrubedge-roi-detail-only {
+    display: none;
+  }
+
+  #scrubedge-roi-simulator[data-mode="simple"] .scrubedge-roi-simple-only {
+    display: block;
+  }
+
+  #scrubedge-roi-simulator[data-mode="detail"] .scrubedge-roi-detail-only {
+    display: block;
+  }
+
+  /* 簡易版で詳細セクションを隠す */
+  #scrubedge-roi-simulator[data-mode="simple"] .scrubedge-roi-detail-section {
+    display: none;
+  }
+
+  /* ===== 病院規模プリセット ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-size-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn {
+    border: 1.5px solid var(--se-border);
+    background: white;
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    text-align: center;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn:hover {
+    border-color: var(--se-navy);
+    background: var(--se-bg-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn.is-active {
+    border-color: var(--se-navy);
+    background: linear-gradient(135deg, var(--se-navy) 0%, var(--se-navy-light) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(15, 31, 72, 0.2);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-label {
+    display: block;
+    font-size: 11px;
+    color: var(--se-text-muted);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn.is-active .scrubedge-roi-size-label {
+    color: rgba(255,255,255,0.85);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--se-navy);
+    line-height: 1.2;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn.is-active .scrubedge-roi-size-value {
+    color: white;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-unit {
+    display: block;
+    font-size: 10px;
+    color: var(--se-text-soft);
+    margin-top: 2px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-size-btn.is-active .scrubedge-roi-size-unit {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* ===== 推計値の表示カード ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-estimates {
+    background: var(--se-bg-card);
+    border: 1px solid var(--se-border-soft);
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimates-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--se-navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimates-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimate-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px 10px;
+    background: white;
+    border: 1px solid var(--se-border-soft);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimate-label {
+    color: var(--se-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimate-value {
+    color: var(--se-navy);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-estimate-note {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--se-text-muted);
+    line-height: 1.6;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-switch-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--se-navy);
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 11px;
+    font-family: inherit;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-switch-link:hover {
+    color: var(--se-navy-deep);
+  }
+
+  /* ===== 内訳 ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-breakdown-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--se-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--se-border-soft);
+    font-size: 13px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row:last-child {
+    border-bottom: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--se-text-muted);
+    flex: 1;
+    min-width: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row strong {
+    color: var(--se-navy);
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row.is-highlight strong {
+    color: var(--se-mint-deep);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-row.is-cost strong {
+    color: var(--se-warning);
+  }
+
+  /* ===== ヘルプマーク（ツールチップ） ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-help {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: var(--se-bg-soft);
+    border: 1px solid var(--se-border);
+    color: var(--se-text-muted);
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help:hover,
+  #scrubedge-roi-simulator .scrubedge-roi-help.is-open {
+    background: var(--se-navy);
+    color: white;
+    border-color: var(--se-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    max-width: 80vw;
+    background: var(--se-navy-deep);
+    color: white;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.65;
+    text-align: left;
+    letter-spacing: 0;
+    box-shadow: 0 8px 24px rgba(15, 31, 72, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    z-index: 100;
+    white-space: normal;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--se-navy-deep);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help:hover .scrubedge-roi-help-tip,
+  #scrubedge-roi-simulator .scrubedge-roi-help.is-open .scrubedge-roi-help-tip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help-tip-title {
+    display: block;
+    font-weight: 700;
+    color: #b8d4ff;
+    margin-bottom: 4px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-help-tip code {
+    background: rgba(255,255,255,0.12);
+    color: #d4e2ff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 10.5px;
+  }
+
+  /* メイン指標カード内のヘルプマーク用調整 */
+  #scrubedge-roi-simulator .scrubedge-roi-main-metric .scrubedge-roi-help {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+    color: white;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-main-metric .scrubedge-roi-help:hover,
+  #scrubedge-roi-simulator .scrubedge-roi-main-metric .scrubedge-roi-help.is-open {
+    background: white;
+    color: var(--se-navy);
+    border-color: white;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-metric-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--se-text-muted);
+    font-size: 11px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  /* ===== CTA ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-cta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-cta-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 13px 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-cta-primary {
+    background: linear-gradient(135deg, var(--se-navy) 0%, var(--se-navy-light) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(26, 48, 104, 0.25);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(26, 48, 104, 0.35);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-cta-secondary {
+    background: white;
+    color: var(--se-navy);
+    border: 1.5px solid var(--se-navy);
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-cta-secondary:hover {
+    background: var(--se-bg-navy);
+  }
+
+  /* ===== 注意書き ===== */
+  #scrubedge-roi-simulator .scrubedge-roi-disclaimer {
+    width: min(1200px, 100%);
+    margin: 24px auto 0;
+    padding: 16px 20px;
+    background: var(--se-bg-soft);
+    border-left: 3px solid var(--se-text-soft);
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: var(--se-text-muted);
+    line-height: 1.8;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-disclaimer p {
+    margin: 0 0 4px;
+  }
+
+  #scrubedge-roi-simulator .scrubedge-roi-disclaimer p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===== レスポンシブ ===== */
+  @media (max-width: 920px) {
+    #scrubedge-roi-simulator .scrubedge-roi-container {
+      grid-template-columns: 1fr;
+    }
+    #scrubedge-roi-simulator .scrubedge-roi-result {
+      position: static;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #scrubedge-roi-simulator {
+      padding: 24px 12px 40px;
+    }
+    #scrubedge-roi-simulator .scrubedge-roi-grid,
+    #scrubedge-roi-simulator .scrubedge-roi-metric-grid,
+    #scrubedge-roi-simulator .scrubedge-roi-cta,
+    #scrubedge-roi-simulator .scrubedge-roi-rate-list {
+      grid-template-columns: 1fr;
+    }
+    #scrubedge-roi-simulator .scrubedge-roi-panel,
+    #scrubedge-roi-simulator .scrubedge-roi-result {
+      padding: 18px;
+      border-radius: 16px;
+    }
+    #scrubedge-roi-simulator .scrubedge-roi-scenario-btn {
+      font-size: 12px;
+      padding: 9px 4px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="legal-header">
+  <div class="legal-header-inner">
+    <a href="index.html" class="legal-logo"><span>ScrubEdge</span></a>
+    <a href="index.html" class="legal-back">← トップに戻る</a>
+  </div>
+</header>
+
+<div id="scrubedge-roi-simulator" data-mode="simple">
+
+  <!-- ===== ヒーロー ===== -->
+  <header class="scrubedge-roi-hero">
+    <div class="scrubedge-roi-badge">ROI SIMULATOR</div>
+    <h2 class="scrubedge-roi-title">ScrubEdge 経済効果シミュレーター</h2>
+    <p class="scrubedge-roi-lead">
+      手術室規模を選ぶだけで、ScrubEdge 導入による年間経済効果を試算できます。<br>
+      より精緻な試算には「詳細シミュレーション」をご利用ください。
+    </p>
+  </header>
+
+  <!-- ===== モード切替タブ ===== -->
+  <div class="scrubedge-roi-tabs" role="tablist" aria-label="シミュレーションモード">
+    <button type="button" class="scrubedge-roi-tab is-active" data-mode-tab="simple">⚡ 簡易シミュレーション</button>
+    <button type="button" class="scrubedge-roi-tab" data-mode-tab="detail">📋 詳細シミュレーション</button>
+  </div>
+
+  <main class="scrubedge-roi-container">
+
+    <!-- ===== 入力パネル ===== -->
+    <section class="scrubedge-roi-panel">
+
+      <!-- シナリオ切替 -->
+      <div class="scrubedge-roi-scenario" role="tablist" aria-label="削減率シナリオ">
+        <button type="button" class="scrubedge-roi-scenario-btn" data-scenario="conservative">保守的</button>
+        <button type="button" class="scrubedge-roi-scenario-btn is-active" data-scenario="standard">標準</button>
+        <button type="button" class="scrubedge-roi-scenario-btn" data-scenario="aggressive">積極的</button>
+      </div>
+
+      <!-- ===== 簡易版：手術室規模選択 ===== -->
+      <div class="scrubedge-roi-simple-only">
+        <div class="scrubedge-roi-section">
+          <h3 class="scrubedge-roi-section-title">
+            手術室規模を選択
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計値の根拠を見る" style="margin-left: 6px; vertical-align: middle;">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">推計値の根拠</span>
+                手術室数を選ぶと、看護師数・手術件数・人件費などを業界の一般的な目安に基づいて自動推計します。各推計値の根拠は、推計結果の「？」マークから確認できます。
+              </span>
+            </span>
+          </h3>
+          <div class="scrubedge-roi-size-grid">
+            <button type="button" class="scrubedge-roi-size-btn" data-size="xs">
+              <span class="scrubedge-roi-size-label">小規模</span>
+              <span class="scrubedge-roi-size-value">〜4室</span>
+              <span class="scrubedge-roi-size-unit">クリニック・小規模病院</span>
+            </button>
+            <button type="button" class="scrubedge-roi-size-btn" data-size="s">
+              <span class="scrubedge-roi-size-label">中小規模</span>
+              <span class="scrubedge-roi-size-value">5〜7室</span>
+              <span class="scrubedge-roi-size-unit">200〜400床目安</span>
+            </button>
+            <button type="button" class="scrubedge-roi-size-btn is-active" data-size="m">
+              <span class="scrubedge-roi-size-label">中規模</span>
+              <span class="scrubedge-roi-size-value">8〜10室</span>
+              <span class="scrubedge-roi-size-unit">400〜600床目安</span>
+            </button>
+            <button type="button" class="scrubedge-roi-size-btn" data-size="l">
+              <span class="scrubedge-roi-size-label">中大規模</span>
+              <span class="scrubedge-roi-size-value">11〜15室</span>
+              <span class="scrubedge-roi-size-unit">600〜800床目安</span>
+            </button>
+            <button type="button" class="scrubedge-roi-size-btn" data-size="xl">
+              <span class="scrubedge-roi-size-label">大規模</span>
+              <span class="scrubedge-roi-size-value">16〜20室</span>
+              <span class="scrubedge-roi-size-unit">800〜1000床目安</span>
+            </button>
+            <button type="button" class="scrubedge-roi-size-btn" data-size="xxl">
+              <span class="scrubedge-roi-size-label">特定機能病院</span>
+              <span class="scrubedge-roi-size-value">21室〜</span>
+              <span class="scrubedge-roi-size-unit">大学病院・基幹病院</span>
+            </button>
+          </div>
+
+          <!-- 推計値の表示 -->
+          <div class="scrubedge-roi-estimates">
+            <div class="scrubedge-roi-estimates-title">📊 自動推計される値（各項目の「？」で根拠を確認）</div>
+            <div class="scrubedge-roi-estimates-list">
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  看護師数
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 業界目安</span>
+                      手術室1室あたりの看護師配置は一般的に5〜8人。日本手術看護学会の運用ガイドラインや病院ヒアリング実績を参考にしています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="nurses">60人</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  月間手術件数
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 業界目安</span>
+                      1室あたり月50〜60件を目安に推計。実際は診療科構成や手術枠運用で大きく変動します。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="surgeries">500件</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  平均時給
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 公的統計</span>
+                      看護師の平均給与水準（厚労省「賃金構造基本統計調査」のレンジ）を時給換算した目安。施設規模が大きいほど高めに推計しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="hourlyCost">3,000円</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  残業単価
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 法定基準</span>
+                      労働基準法に基づく時間外労働の25%増し。<code>平均時給 × 1.25</code> で算出しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="overtimeCost">3,750円</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  シフト作成時間
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">💼 ヒアリング目安</span>
+                      手術室師長へのヒアリング実績から、規模別の概算値を設定しています。実際は希望シフトの調整・スキル考慮の有無で大きく変動します。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="shiftHours">25h/月</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  配置調整時間
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">💼 ヒアリング目安</span>
+                      日々の手術配置・急変対応・直前変更などの調整工数。手術室管理者の業務量実態調査の知見を参考にしています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="assignmentHours">2h/日</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  教育・スキル管理
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">💼 ヒアリング目安</span>
+                      新人指導・スキルマップ管理・症例トレーニング記録などの月次工数の概算。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="educationHours">18h/月</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  月間残業時間
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 業界目安</span>
+                      手術室看護師の月平均残業時間（病院看護実態調査の傾向）を、規模に応じて設定しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="overtimeHours">90h/月</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  年間離職人数
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 公的統計</span>
+                      日本看護協会「病院看護・外来看護実態調査」の離職率（おおむね10〜12%）を看護師数に乗じて推計しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="turnoverCount">2人/年</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  防止できる離職
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">💼 保守的見積</span>
+                      シフト不公平・希望反映不足が離職要因の一部とされることを踏まえ、年間離職の半分弱が改善余地と仮定しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="preventedTurnover">1人/年</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  採用・教育コスト
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 業界目安</span>
+                      看護師1人あたりの採用・教育・欠員補填コストは200〜400万円のレンジで知られており、その中央値を採用しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="turnoverCost">300万円</span>
+              </div>
+              <div class="scrubedge-roi-estimate-item">
+                <span class="scrubedge-roi-estimate-label">
+                  手術室売上/時間
+                  <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="推計根拠">?
+                    <span class="scrubedge-roi-help-tip">
+                      <span class="scrubedge-roi-help-tip-title">📊 業界目安</span>
+                      病院経営指標で手術室1時間あたり12〜20万円のレンジが知られています。施設規模が大きく高難度手術が多いほど高めに設定しています。
+                    </span>
+                  </span>
+                </span>
+                <span class="scrubedge-roi-estimate-value" data-estimate="revenuePerHour">14万円</span>
+              </div>
+            </div>
+            <p class="scrubedge-roi-estimate-note">
+              これらは規模別の<strong>概算値</strong>です。施設の実態に近い試算には、
+              <button type="button" class="scrubedge-roi-switch-link" data-mode-tab="detail">詳細シミュレーション →</button>
+              から各値を直接入力してください。
+            </p>
+          </div>
+        </div>
+
+        <!-- 簡易版でも料金は入力可能 -->
+        <div class="scrubedge-roi-section">
+          <h3 class="scrubedge-roi-section-title">ScrubEdge 導入費</h3>
+          <div class="scrubedge-roi-grid">
+            <div>
+              <label class="scrubedge-roi-label" for="se-monthlyFeeSimple">月額利用料<span class="scrubedge-roi-unit">円/月</span></label>
+              <input class="scrubedge-roi-input" id="se-monthlyFeeSimple" type="number" value="250000" min="0">
+            </div>
+            <div>
+              <label class="scrubedge-roi-label" for="se-subsidySimple">補助金・助成金<span class="scrubedge-roi-unit">円</span></label>
+              <input class="scrubedge-roi-input" id="se-subsidySimple" type="number" value="0" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 詳細版 ===== -->
+      <!-- プリセット表示 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">適用される削減率・改善率</h3>
+        <div class="scrubedge-roi-preset">
+          <div class="scrubedge-roi-preset-title" data-result="presetTitle">標準シナリオ</div>
+          <div class="scrubedge-roi-rate-list">
+            <div class="scrubedge-roi-rate-item"><span>シフト作成</span><strong data-result="rateShift">50%</strong></div>
+            <div class="scrubedge-roi-rate-item"><span>配置調整</span><strong data-result="rateAssign">40%</strong></div>
+            <div class="scrubedge-roi-rate-item"><span>残業</span><strong data-result="rateOvertime">10%</strong></div>
+            <div class="scrubedge-roi-rate-item"><span>教育管理</span><strong data-result="rateEducation">40%</strong></div>
+            <div class="scrubedge-roi-rate-item"><span>稼働転換率</span><strong data-result="rateConvert">20%</strong></div>
+            <div class="scrubedge-roi-rate-item"><span>稼働実現率</span><strong data-result="rateUtilization">50%</strong></div>
+          </div>
+          <span class="scrubedge-roi-preset-hint">※削減率は ScrubEdge 側の仮プリセット値です。実運用では施設ヒアリング・導入範囲・実績データに基づき調整します。</span>
+        </div>
+      </div>
+
+      <!-- 1. 施設基本情報 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">1. 施設基本情報</h3>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-orRooms">手術室数<span class="scrubedge-roi-unit">室</span></label>
+            <input class="scrubedge-roi-input" id="se-orRooms" type="number" value="9" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-nurses">手術室看護師数<span class="scrubedge-roi-unit">人</span></label>
+            <input class="scrubedge-roi-input" id="se-nurses" type="number" value="60" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-monthlySurgeries">月間手術件数<span class="scrubedge-roi-unit">件/月</span></label>
+            <input class="scrubedge-roi-input" id="se-monthlySurgeries" type="number" value="500" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-workingDays">年間稼働日数<span class="scrubedge-roi-unit">日/年</span></label>
+            <input class="scrubedge-roi-input" id="se-workingDays" type="number" value="240" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 人件費・単価 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">2. 人件費・単価</h3>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-hourlyCost">平均時給換算<span class="scrubedge-roi-unit">円/時間</span></label>
+            <input class="scrubedge-roi-input" id="se-hourlyCost" type="number" value="3000" min="0">
+            <span class="scrubedge-roi-hint">看護師・管理者の人件費を時給換算した金額</span>
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-overtimeCost">残業単価<span class="scrubedge-roi-unit">円/時間</span></label>
+            <input class="scrubedge-roi-input" id="se-overtimeCost" type="number" value="3750" min="0">
+            <span class="scrubedge-roi-hint">平均時給の1.25倍を目安</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 現状の管理工数 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">3. 現状の管理工数</h3>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-shiftHours">月間シフト作成時間<span class="scrubedge-roi-unit">時間/月</span></label>
+            <input class="scrubedge-roi-input" id="se-shiftHours" type="number" value="25" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-assignmentHours">1日あたり配置調整時間<span class="scrubedge-roi-unit">時間/日</span></label>
+            <input class="scrubedge-roi-input" id="se-assignmentHours" type="number" value="2" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-educationHours">月間教育・スキル管理工数<span class="scrubedge-roi-unit">時間/月</span></label>
+            <input class="scrubedge-roi-input" id="se-educationHours" type="number" value="18" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-overtimeHours">月間残業時間<span class="scrubedge-roi-unit">時間/月</span></label>
+            <input class="scrubedge-roi-input" id="se-overtimeHours" type="number" value="90" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 離職防止 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">4. 離職防止効果</h3>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-turnoverCount">年間離職人数<span class="scrubedge-roi-unit">人/年</span></label>
+            <input class="scrubedge-roi-input" id="se-turnoverCount" type="number" value="2" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-preventedTurnover">防止できる離職人数<span class="scrubedge-roi-unit">人/年</span></label>
+            <input class="scrubedge-roi-input" id="se-preventedTurnover" type="number" value="1" min="0">
+          </div>
+          <div class="scrubedge-roi-field-wide">
+            <label class="scrubedge-roi-label" for="se-turnoverCost">1人あたり採用・教育・欠員補填コスト<span class="scrubedge-roi-unit">円/人</span></label>
+            <input class="scrubedge-roi-input" id="se-turnoverCost" type="number" value="3000000" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 手術室稼働向上 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">5. 手術室稼働向上効果</h3>
+        <label class="scrubedge-roi-toggle" for="se-includeUtilization">
+          <div class="scrubedge-roi-toggle-text">
+            <strong>稼働向上効果を試算に含める</strong>
+            <span>管理工数削減で生まれた時間の一部が、追加手術枠・キャンセル減少・空き時間削減につながる想定</span>
+          </div>
+          <input class="scrubedge-roi-checkbox" id="se-includeUtilization" type="checkbox" checked>
+        </label>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-revenuePerHour">平均手術室売上/時間<span class="scrubedge-roi-unit">円/時間</span></label>
+            <input class="scrubedge-roi-input" id="se-revenuePerHour" type="number" value="140000" min="0">
+            <span class="scrubedge-roi-hint">不明な場合は10〜20万円/時間で仮置き</span>
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-maxAdditionalHours">稼働向上の上限時間/月<span class="scrubedge-roi-unit">時間/月</span></label>
+            <input class="scrubedge-roi-input" id="se-maxAdditionalHours" type="number" value="20" min="0">
+            <span class="scrubedge-roi-hint">過大試算を避けるための上限</span>
+          </div>
+          <div class="scrubedge-roi-field-wide">
+            <div class="scrubedge-roi-formula">
+              稼働向上効果 = min(管理工数削減時間 × 稼働転換率, 上限時間/月) × 稼働実現率 × 平均手術室売上/時間 × 12ヶ月
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. 導入費 -->
+      <div class="scrubedge-roi-section scrubedge-roi-detail-section">
+        <h3 class="scrubedge-roi-section-title">6. ScrubEdge 導入費</h3>
+        <div class="scrubedge-roi-grid">
+          <div>
+            <label class="scrubedge-roi-label" for="se-monthlyFee">月額利用料<span class="scrubedge-roi-unit">円/月</span></label>
+            <input class="scrubedge-roi-input" id="se-monthlyFee" type="number" value="250000" min="0">
+          </div>
+          <div>
+            <label class="scrubedge-roi-label" for="se-initialCost">初期導入費<span class="scrubedge-roi-unit">円</span></label>
+            <input class="scrubedge-roi-input" id="se-initialCost" type="number" value="0" min="0">
+          </div>
+          <div class="scrubedge-roi-field-wide">
+            <label class="scrubedge-roi-label" for="se-subsidy">補助金・助成金適用額<span class="scrubedge-roi-unit">円</span></label>
+            <input class="scrubedge-roi-input" id="se-subsidy" type="number" value="0" min="0">
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== 結果カード ===== -->
+    <aside class="scrubedge-roi-result">
+      <h3 class="scrubedge-roi-result-title">試算結果</h3>
+
+      <div class="scrubedge-roi-main-metric">
+        <span class="scrubedge-roi-main-label">
+          年間総経済効果
+          <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+            <span class="scrubedge-roi-help-tip">
+              <span class="scrubedge-roi-help-tip-title">計算式</span>
+              シフト作成 + 配置調整 + 残業 + 離職防止 + 教育管理 + 稼働向上効果 の合計（年間）
+            </span>
+          </span>
+        </span>
+        <strong class="scrubedge-roi-main-value" data-result="totalBenefit">1,227万円</strong>
+      </div>
+
+      <div class="scrubedge-roi-metric-grid">
+        <div class="scrubedge-roi-metric">
+          <span class="scrubedge-roi-metric-label">
+            年間純効果
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                年間総経済効果 − 年間費用<br>
+                <code>= 総効果 − (月額×12 + 初期費 − 補助金)</code>
+              </span>
+            </span>
+          </span>
+          <strong class="scrubedge-roi-metric-value" data-result="netBenefit">927万円</strong>
+        </div>
+        <div class="scrubedge-roi-metric">
+          <span class="scrubedge-roi-metric-label">
+            想定ROI
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>純効果 ÷ 年間費用 × 100</code><br>
+                投資1円あたりのリターン率を表します。
+              </span>
+            </span>
+          </span>
+          <strong class="scrubedge-roi-metric-value" data-result="roi">309%</strong>
+        </div>
+        <div class="scrubedge-roi-metric">
+          <span class="scrubedge-roi-metric-label">
+            投資回収期間
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>年間費用 ÷ 年間総経済効果 × 12</code><br>
+                投資が回収されるまでの月数。
+              </span>
+            </span>
+          </span>
+          <strong class="scrubedge-roi-metric-value" data-result="payback">2.9ヶ月</strong>
+        </div>
+        <div class="scrubedge-roi-metric">
+          <span class="scrubedge-roi-metric-label">
+            創出稼働時間
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                min(管理工数削減時間 × 稼働転換率, 上限時間) × 稼働実現率<br>
+                追加手術枠などに転用可能な時間/月。
+              </span>
+            </span>
+          </span>
+          <strong class="scrubedge-roi-metric-value" data-result="additionalHours">4.7h/月</strong>
+        </div>
+      </div>
+
+      <div class="scrubedge-roi-summary" data-result="summaryText">
+        標準シナリオでは、ScrubEdge導入により年間約1,227万円の経済効果が見込まれます。
+      </div>
+
+      <div class="scrubedge-roi-breakdown-title">内訳</div>
+      <div>
+        <div class="scrubedge-roi-row">
+          <span class="scrubedge-roi-row-label">
+            シフト作成工数削減
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>月間シフト作成時間 × 削減率 × 平均時給 × 12</code>
+              </span>
+            </span>
+          </span>
+          <strong data-result="shiftSaving">54万円</strong>
+        </div>
+        <div class="scrubedge-roi-row">
+          <span class="scrubedge-roi-row-label">
+            配置調整工数削減
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>1日あたり配置調整時間 × 削減率 × 平均時給 × 年間稼働日数</code>
+              </span>
+            </span>
+          </span>
+          <strong data-result="assignmentSaving">58万円</strong>
+        </div>
+        <div class="scrubedge-roi-row">
+          <span class="scrubedge-roi-row-label">
+            残業削減
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>月間残業時間 × 削減率 × 残業単価 × 12</code>
+              </span>
+            </span>
+          </span>
+          <strong data-result="overtimeSaving">45万円</strong>
+        </div>
+        <div class="scrubedge-roi-row">
+          <span class="scrubedge-roi-row-label">
+            離職防止効果
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>防止できる離職人数 × 1人あたり採用・教育コスト</code>
+              </span>
+            </span>
+          </span>
+          <strong data-result="turnoverSaving">300万円</strong>
+        </div>
+        <div class="scrubedge-roi-row">
+          <span class="scrubedge-roi-row-label">
+            教育・スキル管理削減
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>月間教育・スキル管理工数 × 削減率 × 平均時給 × 12</code>
+              </span>
+            </span>
+          </span>
+          <strong data-result="educationSaving">29万円</strong>
+        </div>
+        <div class="scrubedge-roi-row is-highlight">
+          <span class="scrubedge-roi-row-label">
+            手術室稼働向上効果
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                min(管理工数削減時間 × 稼働転換率, 上限時間) × 稼働実現率 × 手術室売上/時間 × 12<br>
+                空いた時間を追加手術枠などに転用した場合の収益効果。
+              </span>
+            </span>
+          </span>
+          <strong data-result="utilizationSaving">141万円</strong>
+        </div>
+        <div class="scrubedge-roi-row is-cost">
+          <span class="scrubedge-roi-row-label">
+            ScrubEdge年間費用
+            <span class="scrubedge-roi-help" tabindex="0" role="button" aria-label="計算ロジックを見る">?
+              <span class="scrubedge-roi-help-tip">
+                <span class="scrubedge-roi-help-tip-title">計算式</span>
+                <code>月額利用料 × 12 + 初期導入費 − 補助金</code><br>
+                負の値にはなりません（最低0円）。
+              </span>
+            </span>
+          </span>
+          <strong data-result="annualCost">300万円</strong>
+        </div>
+      </div>
+
+      <div class="scrubedge-roi-cta">
+        <button type="button" class="scrubedge-roi-cta-btn scrubedge-roi-cta-primary" data-cta="contact">この条件で相談する</button>
+        <button type="button" class="scrubedge-roi-cta-btn scrubedge-roi-cta-secondary" data-cta="demo">無料デモを申し込む</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ===== 注意書き ===== -->
+  <div class="scrubedge-roi-disclaimer">
+    <p>※本シミュレーションは入力値と仮プリセットに基づく概算です。</p>
+    <p>※実際の削減効果・稼働向上効果は、施設規模、診療科構成、手術枠運用、麻酔科体制、導入範囲により異なります。</p>
+    <p>※医療安全、教育品質、職員満足度向上などの定性的効果は一部金額に含めていません。</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ROOT_ID = 'scrubedge-roi-simulator';
+  var root = document.getElementById(ROOT_ID);
+  if (!root) return;
+
+  // ====== シナリオ定義 ======
+  var SCENARIOS = {
+    conservative: {
+      title: '保守的シナリオ',
+      shiftRate: 0.35,
+      assignmentRate: 0.25,
+      overtimeRate: 0.05,
+      educationRate: 0.25,
+      conversionRate: 0.10,
+      utilizationRealizationRate: 0.35
+    },
+    standard: {
+      title: '標準シナリオ',
+      shiftRate: 0.50,
+      assignmentRate: 0.40,
+      overtimeRate: 0.10,
+      educationRate: 0.40,
+      conversionRate: 0.20,
+      utilizationRealizationRate: 0.50
+    },
+    aggressive: {
+      title: '積極的シナリオ',
+      shiftRate: 0.65,
+      assignmentRate: 0.55,
+      overtimeRate: 0.15,
+      educationRate: 0.55,
+      conversionRate: 0.30,
+      utilizationRealizationRate: 0.65
+    }
+  };
+
+  // ====== 病院規模プリセット ======
+  // 各サイズの推計値（業界統計・ヒアリング目安に基づく概算）
+  var SIZE_PRESETS = {
+    xs: {
+      label: '小規模（〜4室）',
+      orRooms: 3, nurses: 25, monthlySurgeries: 200, workingDays: 240,
+      hourlyCost: 3000, overtimeCost: 3750,
+      shiftHours: 15, assignmentHours: 1, educationHours: 10, overtimeHours: 50,
+      turnoverCount: 1, preventedTurnover: 0.5, turnoverCost: 3000000,
+      revenuePerHour: 120000, maxAdditionalHours: 15
+    },
+    s: {
+      label: '中小規模（5〜7室）',
+      orRooms: 6, nurses: 40, monthlySurgeries: 320, workingDays: 240,
+      hourlyCost: 3000, overtimeCost: 3750,
+      shiftHours: 20, assignmentHours: 1.5, educationHours: 15, overtimeHours: 70,
+      turnoverCount: 2, preventedTurnover: 1, turnoverCost: 3000000,
+      revenuePerHour: 130000, maxAdditionalHours: 18
+    },
+    m: {
+      label: '中規模（8〜10室）',
+      orRooms: 9, nurses: 60, monthlySurgeries: 500, workingDays: 240,
+      hourlyCost: 3000, overtimeCost: 3750,
+      shiftHours: 25, assignmentHours: 2, educationHours: 18, overtimeHours: 90,
+      turnoverCount: 2, preventedTurnover: 1, turnoverCost: 3000000,
+      revenuePerHour: 140000, maxAdditionalHours: 20
+    },
+    l: {
+      label: '中大規模（11〜15室）',
+      orRooms: 13, nurses: 90, monthlySurgeries: 700, workingDays: 240,
+      hourlyCost: 3200, overtimeCost: 4000,
+      shiftHours: 30, assignmentHours: 2, educationHours: 20, overtimeHours: 100,
+      turnoverCount: 3, preventedTurnover: 1, turnoverCost: 3000000,
+      revenuePerHour: 150000, maxAdditionalHours: 22
+    },
+    xl: {
+      label: '大規模（16〜20室）',
+      orRooms: 18, nurses: 120, monthlySurgeries: 900, workingDays: 240,
+      hourlyCost: 3200, overtimeCost: 4000,
+      shiftHours: 35, assignmentHours: 2.5, educationHours: 25, overtimeHours: 130,
+      turnoverCount: 4, preventedTurnover: 1.5, turnoverCost: 3500000,
+      revenuePerHour: 160000, maxAdditionalHours: 25
+    },
+    xxl: {
+      label: '特定機能病院（21室〜）',
+      orRooms: 25, nurses: 160, monthlySurgeries: 1200, workingDays: 240,
+      hourlyCost: 3500, overtimeCost: 4375,
+      shiftHours: 40, assignmentHours: 3, educationHours: 30, overtimeHours: 160,
+      turnoverCount: 5, preventedTurnover: 2, turnoverCost: 3500000,
+      revenuePerHour: 180000, maxAdditionalHours: 30
+    }
+  };
+
+  var currentScenario = SCENARIOS.standard;
+  var currentSize = 'm';
+  var currentMode = 'simple';
+
+  // ====== ヘルパー ======
+  function $(id) { return document.getElementById(id); }
+  function $(selector) { return root.querySelectorAll(selector); }
+  function setResult(name, text) {
+    var nodes = root.querySelectorAll('[data-result="' + name + '"]');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = text;
+    }
+  }
+  function setEstimate(name, text) {
+    var nodes = root.querySelectorAll('[data-estimate="' + name + '"]');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].textContent = text;
+    }
+  }
+  function num(id) {
+    var node = $(id);
+    if (!node) return 0;
+    var v = parseFloat(node.value);
+    return isNaN(v) || v < 0 ? 0 : v;
+  }
+  function yenMan(n) {
+    var man = Math.round((n || 0) / 10000);
+    return man.toLocaleString('ja-JP') + '万円';
+  }
+  function percent(n) {
+    return Math.round(n * 100) + '%';
+  }
+  function fmt(n) {
+    return Math.round(n).toLocaleString('ja-JP');
+  }
+
+  // ====== モード切替 ======
+  function switchMode(mode) {
+    currentMode = mode;
+    root.setAttribute('data-mode', mode);
+    var tabs = root.querySelectorAll('[data-mode-tab]');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].classList.toggle('is-active', tabs[i].getAttribute('data-mode-tab') === mode);
+    }
+    // 簡易→詳細に切り替えた時、現在の規模プリセットを詳細フォームに反映
+    if (mode === 'detail') {
+      applySizePreset(currentSize, true);
+    }
+    calculate();
+  }
+
+  // ====== 規模プリセット適用 ======
+  function applySizePreset(sizeKey, syncToDetail) {
+    var preset = SIZE_PRESETS[sizeKey];
+    if (!preset) return;
+    currentSize = sizeKey;
+
+    // ボタンのアクティブ状態を更新
+    var buttons = root.querySelectorAll('[data-size]');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.toggle('is-active', buttons[i].getAttribute('data-size') === sizeKey);
+    }
+
+    // 推計値の表示更新
+    setEstimate('nurses', preset.nurses + '人');
+    setEstimate('surgeries', preset.monthlySurgeries.toLocaleString('ja-JP') + '件');
+    setEstimate('hourlyCost', preset.hourlyCost.toLocaleString('ja-JP') + '円');
+    setEstimate('overtimeCost', preset.overtimeCost.toLocaleString('ja-JP') + '円');
+    setEstimate('shiftHours', preset.shiftHours + 'h/月');
+    setEstimate('assignmentHours', preset.assignmentHours + 'h/日');
+    setEstimate('educationHours', preset.educationHours + 'h/月');
+    setEstimate('overtimeHours', preset.overtimeHours + 'h/月');
+    setEstimate('turnoverCount', preset.turnoverCount + '人/年');
+    setEstimate('preventedTurnover', preset.preventedTurnover + '人/年');
+    setEstimate('turnoverCost', yenMan(preset.turnoverCost));
+    setEstimate('revenuePerHour', Math.round(preset.revenuePerHour / 10000) + '万円');
+
+    // 詳細フォームにも同期（ユーザーが簡易→詳細に切り替えた時に使う）
+    if (syncToDetail) {
+      var fieldMap = {
+        'se-orRooms': preset.orRooms,
+        'se-nurses': preset.nurses,
+        'se-monthlySurgeries': preset.monthlySurgeries,
+        'se-workingDays': preset.workingDays,
+        'se-hourlyCost': preset.hourlyCost,
+        'se-overtimeCost': preset.overtimeCost,
+        'se-shiftHours': preset.shiftHours,
+        'se-assignmentHours': preset.assignmentHours,
+        'se-educationHours': preset.educationHours,
+        'se-overtimeHours': preset.overtimeHours,
+        'se-turnoverCount': preset.turnoverCount,
+        'se-preventedTurnover': preset.preventedTurnover,
+        'se-turnoverCost': preset.turnoverCost,
+        'se-revenuePerHour': preset.revenuePerHour,
+        'se-maxAdditionalHours': preset.maxAdditionalHours
+      };
+      for (var key in fieldMap) {
+        var el = $(key);
+        if (el) el.value = fieldMap[key];
+      }
+    }
+  }
+
+  // ====== 計算 ======
+  function calculate() {
+    // プリセット表示更新
+    setResult('presetTitle', currentScenario.title);
+    setResult('rateShift', percent(currentScenario.shiftRate));
+    setResult('rateAssign', percent(currentScenario.assignmentRate));
+    setResult('rateOvertime', percent(currentScenario.overtimeRate));
+    setResult('rateEducation', percent(currentScenario.educationRate));
+    setResult('rateConvert', percent(currentScenario.conversionRate));
+    setResult('rateUtilization', percent(currentScenario.utilizationRealizationRate));
+
+    var hourlyCost, overtimeCost, workingDays, shiftHours, assignmentHours,
+        educationHours, overtimeHours, preventedTurnover, turnoverCost,
+        revenuePerHour, maxAdditionalHours, monthlyFee, initialCost, subsidy,
+        includeUtilization;
+
+    if (currentMode === 'simple') {
+      // 簡易版：規模プリセットの値を使う
+      var preset = SIZE_PRESETS[currentSize];
+      hourlyCost = preset.hourlyCost;
+      overtimeCost = preset.overtimeCost;
+      workingDays = preset.workingDays;
+      shiftHours = preset.shiftHours;
+      assignmentHours = preset.assignmentHours;
+      educationHours = preset.educationHours;
+      overtimeHours = preset.overtimeHours;
+      preventedTurnover = preset.preventedTurnover;
+      turnoverCost = preset.turnoverCost;
+      revenuePerHour = preset.revenuePerHour;
+      maxAdditionalHours = preset.maxAdditionalHours;
+      monthlyFee = num('se-monthlyFeeSimple');
+      initialCost = 0;
+      subsidy = num('se-subsidySimple');
+      includeUtilization = true;
+    } else {
+      // 詳細版：フォームの値を使う
+      hourlyCost = num('se-hourlyCost');
+      overtimeCost = num('se-overtimeCost');
+      workingDays = num('se-workingDays');
+      shiftHours = num('se-shiftHours');
+      assignmentHours = num('se-assignmentHours');
+      educationHours = num('se-educationHours');
+      overtimeHours = num('se-overtimeHours');
+      preventedTurnover = num('se-preventedTurnover');
+      turnoverCost = num('se-turnoverCost');
+      revenuePerHour = num('se-revenuePerHour');
+      maxAdditionalHours = num('se-maxAdditionalHours');
+      monthlyFee = num('se-monthlyFee');
+      initialCost = num('se-initialCost');
+      subsidy = num('se-subsidy');
+      includeUtilization = $('se-includeUtilization') ? $('se-includeUtilization').checked : true;
+    }
+
+    // 削減時間（月間）
+    var monthlyShiftSavedHours = shiftHours * currentScenario.shiftRate;
+    var monthlyAssignmentSavedHours = assignmentHours * currentScenario.assignmentRate * (workingDays / 12);
+    var monthlyEducationSavedHours = educationHours * currentScenario.educationRate;
+
+    // 各削減効果（年間）
+    var shiftSaving = monthlyShiftSavedHours * hourlyCost * 12;
+    var assignmentSaving = assignmentHours * currentScenario.assignmentRate * hourlyCost * workingDays;
+    var overtimeSaving = overtimeHours * currentScenario.overtimeRate * overtimeCost * 12;
+    var turnoverSaving = preventedTurnover * turnoverCost;
+    var educationSaving = monthlyEducationSavedHours * hourlyCost * 12;
+
+    // 稼働向上効果
+    var monthlyManagedSavedHours = monthlyShiftSavedHours + monthlyAssignmentSavedHours + monthlyEducationSavedHours;
+    var potentialAdditionalHours = monthlyManagedSavedHours * currentScenario.conversionRate;
+    var cappedAdditionalHours = Math.min(potentialAdditionalHours, maxAdditionalHours);
+    var realizedAdditionalHours = includeUtilization
+      ? cappedAdditionalHours * currentScenario.utilizationRealizationRate
+      : 0;
+    var utilizationSaving = realizedAdditionalHours * revenuePerHour * 12;
+
+    // 集計
+    var totalBenefit = shiftSaving + assignmentSaving + overtimeSaving + turnoverSaving + educationSaving + utilizationSaving;
+    var annualCost = Math.max(monthlyFee * 12 + initialCost - subsidy, 0);
+    var netBenefit = totalBenefit - annualCost;
+    var roi = annualCost > 0 ? (netBenefit / annualCost) * 100 : null;
+    var payback = totalBenefit > 0 ? (annualCost / totalBenefit) * 12 : null;
+
+    // 表示更新
+    setResult('totalBenefit', yenMan(totalBenefit));
+    setResult('netBenefit', yenMan(netBenefit));
+    setResult('roi', roi === null ? 'ー' : Math.round(roi).toLocaleString('ja-JP') + '%');
+    setResult('payback', payback === null ? 'ー' : payback.toFixed(1) + 'ヶ月');
+    setResult('additionalHours', realizedAdditionalHours.toFixed(1) + 'h/月');
+
+    setResult('shiftSaving', yenMan(shiftSaving));
+    setResult('assignmentSaving', yenMan(assignmentSaving));
+    setResult('overtimeSaving', yenMan(overtimeSaving));
+    setResult('turnoverSaving', yenMan(turnoverSaving));
+    setResult('educationSaving', yenMan(educationSaving));
+    setResult('utilizationSaving', yenMan(utilizationSaving));
+    setResult('annualCost', yenMan(annualCost));
+
+    // サマリー文
+    var summary = currentScenario.title + 'では、ScrubEdge導入により年間約' + yenMan(totalBenefit) +
+      'の経済効果が見込まれます。このうち手術室稼働向上効果は約' + yenMan(utilizationSaving) +
+      '、創出稼働時間は月' + realizedAdditionalHours.toFixed(1) + '時間です。年間費用' + yenMan(annualCost) +
+      'を差し引いた純効果は約' + yenMan(netBenefit) + '、投資回収期間は' +
+      (payback === null ? '算出不可' : payback.toFixed(1) + 'ヶ月') + 'です。';
+    setResult('summaryText', summary);
+  }
+
+  // ====== シナリオ切替 ======
+  function bindScenarioButtons() {
+    var buttons = $('.scrubedge-roi-scenario-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-scenario');
+          if (!SCENARIOS[key]) return;
+          currentScenario = SCENARIOS[key];
+          for (var j = 0; j < buttons.length; j++) {
+            buttons[j].classList.toggle('is-active', buttons[j] === btn);
+          }
+          calculate();
+        });
+      })(buttons[i]);
+    }
+  }
+
+  // ====== モード切替タブ ======
+  function bindModeTabs() {
+    var tabs = root.querySelectorAll('[data-mode-tab]');
+    for (var i = 0; i < tabs.length; i++) {
+      (function (tab) {
+        tab.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var mode = tab.getAttribute('data-mode-tab');
+          switchMode(mode);
+        });
+      })(tabs[i]);
+    }
+  }
+
+  // ====== 規模プリセット ======
+  function bindSizeButtons() {
+    var buttons = root.querySelectorAll('[data-size]');
+    for (var i = 0; i < buttons.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-size');
+          applySizePreset(key, false);
+          calculate();
+        });
+      })(buttons[i]);
+    }
+  }
+
+  // ====== 入力イベント ======
+  function bindInputs() {
+    var inputs = root.querySelectorAll('input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('input', calculate);
+      inputs[i].addEventListener('change', calculate);
+    }
+  }
+
+  // ====== CTAボタン ======
+  function bindCTA() {
+    var ctaButtons = root.querySelectorAll('[data-cta]');
+    for (var i = 0; i < ctaButtons.length; i++) {
+      ctaButtons[i].addEventListener('click', function (e) {
+        var type = e.currentTarget.getAttribute('data-cta');
+        window.location.href = type === 'contact' ? 'contact.html' : 'index.html#contact';
+      });
+    }
+  }
+
+  // ====== ヘルプマーク ======
+  function bindHelpMarks() {
+    var helps = root.querySelectorAll('.scrubedge-roi-help');
+
+    function closeAll(except) {
+      for (var i = 0; i < helps.length; i++) {
+        if (helps[i] !== except) helps[i].classList.remove('is-open');
+      }
+    }
+
+    for (var i = 0; i < helps.length; i++) {
+      (function (help) {
+        help.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var wasOpen = help.classList.contains('is-open');
+          closeAll(help);
+          if (!wasOpen) help.classList.add('is-open');
+        });
+        help.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            var wasOpen = help.classList.contains('is-open');
+            closeAll(help);
+            if (!wasOpen) help.classList.add('is-open');
+          } else if (e.key === 'Escape') {
+            help.classList.remove('is-open');
+          }
+        });
+      })(helps[i]);
+    }
+
+    document.addEventListener('click', function () {
+      closeAll(null);
+    });
+  }
+
+  // ====== 初期化 ======
+  applySizePreset('m', false);
+  bindModeTabs();
+  bindScenarioButtons();
+  bindSizeButtons();
+  bindInputs();
+  bindCTA();
+  bindHelpMarks();
+  calculate();
+
+})();
+</script>
+
+<footer class="legal-footer">
+  <nav class="legal-footer-links" aria-label="フッターナビゲーション">
+    <a href="index.html">トップ</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="terms.html">利用規約</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="privacy.html">プライバシーポリシー</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="contact.html">お問い合わせ</a>
+  </nav>
+  <p class="legal-copy">© 2026 Medical Strategy &amp; Innovation, Inc. All rights reserved.</p>
+</footer>
+
+<script src="analytics.js" defer></script>
+
+</body>
+</html>
