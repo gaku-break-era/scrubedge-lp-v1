@@ -1455,7 +1455,15 @@ section{padding:100px 0;position:relative}
 }
 .footer .logo{color:#fff;justify-content:center;margin-bottom:18px}
 .footer-info{margin-bottom:20px;line-height:1.95}
+.footer-links{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:6px 18px;margin-bottom:24px;font-size:13px;
+}
+.footer-links a{color:rgba(255,255,255,.8);transition:color .2s ease}
+.footer-links a:hover{color:#fff;text-decoration:underline}
+.footer-links-sep{color:rgba(255,255,255,.25);font-size:11px}
 .footer-copy{font-size:12px;opacity:.6;padding-top:28px;border-top:1px solid rgba(255,255,255,.1)}
+@media(max-width:480px){.footer-links{font-size:12px;gap:4px 12px}}
 
 /* ===== Sticky mobile CTA ===== */
 .mobile-cta{
@@ -2410,6 +2418,13 @@ section{padding:100px 0;position:relative}
       <span class="logo-text" style="background:linear-gradient(135deg,#fff 0%,#e0e7ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">ScrubEdge</span>
     </div>
     <p class="footer-info">株式会社Medical Strategy &amp; Innovation<br>手術室特化型 業務支援システム</p>
+    <nav class="footer-links" aria-label="フッターナビゲーション">
+      <a href="terms.html">利用規約</a>
+      <span class="footer-links-sep" aria-hidden="true">|</span>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <span class="footer-links-sep" aria-hidden="true">|</span>
+      <a href="index.html#contact">お問い合わせ</a>
+    </nav>
     <p class="footer-copy">© 2026 Medical Strategy &amp; Innovation, Inc. All rights reserved.</p>
   </div>
 </footer>
