@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ｜ScrubEdge</title>
+<meta name="description" content="ScrubEdge（スクラブエッジ）への一般的なお問い合わせはこちらのフォームよりお送りください。種別を選んで送信すると自動で問い合わせIDが発行されます。">
+<link rel="canonical" href="https://scrubedge.com/contact.html">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e3a8a;--navy-deep:#0f1f4d;
+  --primary:#2563eb;--primary-light:#3b82f6;
+  --text:#1a2b42;--text-sub:#5a6b80;
+  --border:#dde6ee;--bg:#ffffff;--bg-soft:#eef3fb;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI","Noto Sans JP","Segoe UI",sans-serif;
+  color:var(--text);background:var(--bg);
+  line-height:1.85;font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.legal-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border)}
+.legal-header-inner{
+  max-width:980px;margin:0 auto;padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.legal-logo{font-weight:800;font-size:20px;color:var(--navy);letter-spacing:-.02em}
+.legal-logo span{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--primary) 60%,var(--primary-light) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.legal-back{font-size:13px;color:var(--text-sub);font-weight:600}
+.legal-back:hover{color:var(--primary);text-decoration:none}
+
+/* Main */
+main{max-width:680px;margin:0 auto;padding:60px 24px 80px}
+.page-tag{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:.25em;
+  color:var(--primary);margin-bottom:12px;
+}
+h1{
+  font-size:clamp(28px,4vw,36px);font-weight:800;color:var(--navy);
+  letter-spacing:-.01em;line-height:1.4;margin-bottom:10px;
+}
+.lead{
+  color:var(--text-sub);font-size:14.5px;line-height:1.85;
+  margin-bottom:36px;
+}
+.lead a{font-weight:600}
+.notice{
+  background:var(--bg-soft);border-radius:12px;
+  padding:16px 20px;margin-bottom:32px;
+  font-size:13.5px;line-height:1.75;color:var(--text-sub);
+}
+.notice strong{color:var(--text);font-weight:700;display:block;margin-bottom:4px}
+
+/* Form */
+.form-row{margin-bottom:22px}
+.form-row label{
+  display:block;font-size:14px;font-weight:700;color:var(--navy);
+  margin-bottom:8px;
+}
+.form-row .req{
+  display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;
+  background:#ef4444;color:#fff;padding:2px 8px;border-radius:4px;
+  margin-left:8px;vertical-align:middle;
+}
+.form-row .opt{
+  display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;
+  background:#e5eaf2;color:var(--text-sub);padding:2px 8px;border-radius:4px;
+  margin-left:8px;vertical-align:middle;
+}
+.form-row input[type=text],
+.form-row input[type=email],
+.form-row input[type=tel],
+.form-row textarea,
+.form-row select{
+  width:100%;padding:13px 16px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:15px;font-family:inherit;color:var(--text);
+  background:#fff;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+.form-row textarea{min-height:140px;resize:vertical;line-height:1.7}
+.form-row select{
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a6b80' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 16px center;
+  padding-right:42px;cursor:pointer;
+}
+.form-row input:focus,
+.form-row textarea:focus,
+.form-row select:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+.form-row .help{
+  margin-top:6px;font-size:12px;color:var(--text-sub);line-height:1.6;
+}
+.form-submit{
+  width:100%;padding:16px 28px;border:none;cursor:pointer;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+  color:#fff;font-weight:700;font-size:15px;font-family:inherit;
+  box-shadow:0 10px 30px rgba(37,99,235,.35);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  margin-top:10px;
+}
+.form-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 40px rgba(37,99,235,.45)}
+.form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form-note{
+  margin-top:16px;text-align:center;font-size:12px;color:var(--text-sub);
+}
+.form-success{
+  display:none;text-align:center;padding:30px 20px;
+  background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(59,130,246,.04));
+  border:1.5px solid rgba(37,99,235,.2);border-radius:18px;
+}
+.form-success.show{display:block}
+.form-success-icon{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  box-shadow:0 8px 24px rgba(37,99,235,.3);
+}
+.form-success h2{
+  font-size:22px;font-weight:800;color:var(--navy);margin-bottom:10px;
+}
+.form-success p{font-size:14px;color:var(--text-sub);line-height:1.85;margin-bottom:6px}
+
+/* Footer */
+.legal-footer{
+  background:var(--navy-deep);color:rgba(255,255,255,.7);
+  padding:40px 24px 28px;text-align:center;font-size:13px;margin-top:60px;
+}
+.legal-footer-links{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:6px 18px;margin-bottom:18px;
+}
+.legal-footer-links a{color:rgba(255,255,255,.8)}
+.legal-footer-links a:hover{color:#fff}
+.legal-footer-sep{color:rgba(255,255,255,.25);font-size:11px}
+.legal-copy{font-size:12px;opacity:.6;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)}
+@media(max-width:560px){
+  main{padding:40px 20px 60px}
+  .form-row input,.form-row textarea,.form-row select{font-size:14.5px;padding:12px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="legal-header">
+  <div class="legal-header-inner">
+    <a href="index.html" class="legal-logo"><span>ScrubEdge</span></a>
+    <a href="index.html" class="legal-back">← トップに戻る</a>
+  </div>
+</header>
+
+<main>
+  <span class="page-tag">CONTACT</span>
+  <h1>お問い合わせ</h1>
+  <p class="lead">ScrubEdgeに関するご質問、ご相談、取材依頼など、一般的なお問い合わせはこちらのフォームよりお送りください。<br>無料デモのお申込みは <a href="index.html#contact">デモ相談フォーム</a> をご利用ください。</p>
+
+  <div class="notice">
+    <strong>送信後の流れ</strong>
+    自動返信メールに <em>問い合わせID</em> をお送りしますので、ご返信時にあわせてお知らせいただくとスムーズです。担当者より3営業日以内にご返信いたします。
+  </div>
+
+  <form id="inquiryForm" novalidate>
+    <input type="hidden" name="form_type" value="inquiry">
+
+    <div class="form-row">
+      <label>お問い合わせ種別<span class="req">必須</span></label>
+      <select name="category" required>
+        <option value="">選択してください</option>
+        <option value="製品の機能・仕様について">製品の機能・仕様について</option>
+        <option value="料金プラン・お見積もりについて">料金プラン・お見積もりについて</option>
+        <option value="導入・初期設定について">導入・初期設定について</option>
+        <option value="不具合・障害のご報告">不具合・障害のご報告</option>
+        <option value="取材・メディア掲載のご依頼">取材・メディア掲載のご依頼</option>
+        <option value="採用・パートナーシップ・提携">採用・パートナーシップ・提携</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>お名前<span class="req">必須</span></label>
+      <input type="text" name="name" required placeholder="例）山田 太郎">
+    </div>
+
+    <div class="form-row">
+      <label>会社名・施設名<span class="opt">任意</span></label>
+      <input type="text" name="org" placeholder="例）○○病院 / 株式会社○○">
+    </div>
+
+    <div class="form-row">
+      <label>メールアドレス<span class="req">必須</span></label>
+      <input type="email" name="email" required placeholder="例）example@hospital.jp">
+      <p class="help">自動返信メールおよび回答メールはこちらのアドレスにお送りします。</p>
+    </div>
+
+    <div class="form-row">
+      <label>電話番号<span class="opt">任意</span></label>
+      <input type="tel" name="tel" placeholder="例）03-1234-5678">
+    </div>
+
+    <div class="form-row">
+      <label>お問い合わせ内容<span class="req">必須</span></label>
+      <textarea name="message" required placeholder="ご質問、ご相談内容を具体的にご記入ください。"></textarea>
+    </div>
+
+    <button type="submit" class="form-submit">送信する →</button>
+    <p class="form-note">送信いただいた内容は <a href="privacy.html">プライバシーポリシー</a> に従って取り扱います。</p>
+  </form>
+
+  <div class="form-success" id="inquirySuccess">
+    <div class="form-success-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2>お問い合わせを受け付けました</h2>
+    <p>3営業日以内に担当者よりご返信いたします。</p>
+    <p>ご入力いただいたメールアドレス宛に <strong>問い合わせID</strong> 付きの自動返信メールをお送りしました。届かない場合は迷惑メールフォルダもご確認ください。</p>
+  </div>
+</main>
+
+<footer class="legal-footer">
+  <nav class="legal-footer-links" aria-label="フッターナビゲーション">
+    <a href="index.html">トップ</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="terms.html">利用規約</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="privacy.html">プライバシーポリシー</a>
+    <span class="legal-footer-sep" aria-hidden="true">|</span>
+    <a href="contact.html">お問い合わせ</a>
+  </nav>
+  <p class="legal-copy">© 2026 Medical Strategy &amp; Innovation, Inc. All rights reserved.</p>
+</footer>
+
+<script>
+const FORM_ENDPOINT='https://script.google.com/macros/s/AKfycbzmN5fhQls2uhlhqL8Fobu6zbU2hsC28fgsFLwBguQUU7cAgDkZWJm4ydM_M2H9LUmv/exec';
+document.getElementById('inquiryForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const form=e.target;
+  const btn=form.querySelector('.form-submit');
+  const original=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='送信中…';
+  try{
+    await fetch(FORM_ENDPOINT,{
+      method:'POST',
+      mode:'no-cors',
+      body:new URLSearchParams(new FormData(form))
+    });
+    form.style.display='none';
+    document.getElementById('inquirySuccess').classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(err){
+    btn.disabled=false;
+    btn.textContent=original;
+    alert('送信に失敗しました。お手数ですが時間をおいて再度お試しください。\n\n直接のご連絡先: medical.s.i.2025@gmail.com');
+  }
+});
+</script>
+
+</body>
+</html>
