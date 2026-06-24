@@ -1101,36 +1101,104 @@ section{padding:100px 0;position:relative}
   max-width:1080px;margin:0 auto;
 }
 
-/* ROI CTA card */
-.roi-cta-card{
-  max-width:1080px;margin:24px auto 0;
-  background:linear-gradient(135deg,var(--navy) 0%,var(--primary) 100%);
-  border-radius:var(--radius);
-  padding:28px 32px;
-  display:flex;gap:24px;align-items:center;justify-content:space-between;
-  box-shadow:0 14px 40px rgba(30,58,138,.18);
-  color:#fff;flex-wrap:wrap;
+/* ROI Mini Simulator */
+.roi-mini{
+  background:linear-gradient(180deg,#f4f8fb 0%,#fff 100%);
+  position:relative;
 }
-.roi-cta-card .roi-cta-text h3{
-  font-size:19px;font-weight:800;margin-bottom:6px;color:#fff;line-height:1.4;
+.beta-pill{
+  display:inline-block;font-style:normal;
+  font-size:10px;font-weight:800;letter-spacing:.1em;
+  background:linear-gradient(135deg,#ff6b6b,#ff9966);color:#fff;
+  padding:3px 10px;border-radius:999px;
+  margin-left:10px;vertical-align:middle;
+  -webkit-background-clip:initial;background-clip:initial;
 }
-.roi-cta-card .roi-cta-text p{
-  font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.85);max-width:560px;
+.roi-mini-card{
+  max-width:980px;margin:0 auto;
+  background:#fff;border-radius:var(--radius);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  padding:32px;
 }
-.roi-cta-card .roi-cta-btn{
+.roi-mini-size-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:24px;
+}
+.roi-mini-size-btn{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:12px;padding:14px 10px;cursor:pointer;
+  transition:all .15s ease;font-family:inherit;text-align:center;
+}
+.roi-mini-size-btn:hover{border-color:var(--navy);background:#f6f9fd}
+.roi-mini-size-btn.is-active{
+  border-color:var(--navy);
+  background:linear-gradient(135deg,var(--navy),var(--primary));
+  color:#fff;
+  box-shadow:0 4px 12px rgba(30,58,138,.2);
+}
+.roi-mini-size-label{
+  display:block;font-size:11px;font-weight:600;
+  color:var(--text-sub);margin-bottom:4px;letter-spacing:.04em;
+}
+.roi-mini-size-btn.is-active .roi-mini-size-label{color:rgba(255,255,255,.85)}
+.roi-mini-size-value{
+  display:block;font-size:15px;font-weight:800;color:var(--navy);line-height:1.2;
+}
+.roi-mini-size-btn.is-active .roi-mini-size-value{color:#fff}
+.roi-mini-results{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin-bottom:22px;
+}
+.roi-mini-metric{
+  background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 60%,var(--primary) 100%);
+  color:#fff;border-radius:14px;padding:20px 16px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.roi-mini-metric::after{
+  content:"";position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%);
+}
+.roi-mini-metric-label{
+  display:block;font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.85);margin-bottom:8px;letter-spacing:.04em;
+  position:relative;z-index:1;
+}
+.roi-mini-metric-value{
+  display:block;font-size:26px;font-weight:800;
+  color:#fff;line-height:1.2;letter-spacing:-.01em;
+  position:relative;z-index:1;
+}
+.roi-mini-detail{text-align:center}
+.roi-mini-detail-link{
   display:inline-flex;align-items:center;gap:8px;
-  padding:14px 24px;border-radius:999px;
+  padding:14px 28px;border-radius:999px;
   background:#fff;color:var(--navy);
-  font-weight:800;font-size:14px;white-space:nowrap;
+  border:2px solid var(--navy);
+  font-weight:700;font-size:14px;
   transition:all .3s cubic-bezier(.4,0,.2,1);
-  flex-shrink:0;
 }
-.roi-cta-card .roi-cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.roi-mini-detail-link:hover{
+  background:var(--navy);color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(30,58,138,.25);
+}
+.roi-mini-disclaimer{
+  max-width:980px;margin:18px auto 0;
+  font-size:12px;color:var(--text-sub);
+  text-align:center;line-height:1.75;
+}
 @media(max-width:640px){
-  .roi-cta-card{padding:22px 20px;gap:16px}
-  .roi-cta-card .roi-cta-text h3{font-size:16px}
-  .roi-cta-card .roi-cta-text p{font-size:12.5px}
-  .roi-cta-card .roi-cta-btn{padding:12px 20px;font-size:13px;width:100%;justify-content:center}
+  .roi-mini-card{padding:22px 18px}
+  .roi-mini-size-grid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .roi-mini-size-btn{padding:12px 6px}
+  .roi-mini-size-value{font-size:13px}
+  .roi-mini-results{gap:6px}
+  .roi-mini-metric{padding:14px 8px}
+  .roi-mini-metric-label{font-size:10px;margin-bottom:5px}
+  .roi-mini-metric-value{font-size:18px}
+  .roi-mini-detail-link{padding:12px 20px;font-size:13px}
+  .beta-pill{font-size:9px;padding:2px 7px;margin-left:6px}
 }
 .pricing-note-icon{
   flex-shrink:0;width:24px;height:24px;border-radius:50%;
@@ -2185,13 +2253,67 @@ section{padding:100px 0;position:relative}
       <div>表示価格はすべて税抜です。<br>導入支援・カスタマイズをご希望の場合は、別途お見積りいたします。詳しくはお問い合わせください。</div>
     </div>
 
-    <div class="roi-cta-card reveal">
-      <div class="roi-cta-text">
-        <h3>あなたの施設での投資回収はいつ？</h3>
-        <p>施設規模を選ぶだけで、年間の経済効果・投資回収期間・ROIを試算できます。シフト作成・配置調整・残業・離職防止・教育管理・稼働向上の合計効果を金額化。</p>
-      </div>
-      <a href="roi-simulator.html" class="roi-cta-btn">投資回収シミュレーションを試す →</a>
+  </div>
+</section>
+
+<!-- ROI Mini Simulator -->
+<section class="roi-mini" id="roi">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-tag">ROI ESTIMATE</span>
+      <h2 class="section-title">投資効果<em>ざっくり試算</em><span class="beta-pill">BETA</span></h2>
+      <p class="section-lead">施設規模を選ぶと、ScrubEdge導入による年間経済効果・投資回収期間・ROIをおおよそ試算できます。<br>※ベータ版・業界目安に基づく概算値です。</p>
     </div>
+
+    <div class="roi-mini-card reveal">
+      <div class="roi-mini-size-grid">
+        <button type="button" class="roi-mini-size-btn" data-rmini-size="xs">
+          <span class="roi-mini-size-label">小規模</span>
+          <span class="roi-mini-size-value">〜4室</span>
+        </button>
+        <button type="button" class="roi-mini-size-btn" data-rmini-size="s">
+          <span class="roi-mini-size-label">中小規模</span>
+          <span class="roi-mini-size-value">5〜7室</span>
+        </button>
+        <button type="button" class="roi-mini-size-btn is-active" data-rmini-size="m">
+          <span class="roi-mini-size-label">中規模</span>
+          <span class="roi-mini-size-value">8〜10室</span>
+        </button>
+        <button type="button" class="roi-mini-size-btn" data-rmini-size="l">
+          <span class="roi-mini-size-label">中大規模</span>
+          <span class="roi-mini-size-value">11〜15室</span>
+        </button>
+        <button type="button" class="roi-mini-size-btn" data-rmini-size="xl">
+          <span class="roi-mini-size-label">大規模</span>
+          <span class="roi-mini-size-value">16〜20室</span>
+        </button>
+        <button type="button" class="roi-mini-size-btn" data-rmini-size="xxl">
+          <span class="roi-mini-size-label">特定機能病院</span>
+          <span class="roi-mini-size-value">21室〜</span>
+        </button>
+      </div>
+
+      <div class="roi-mini-results">
+        <div class="roi-mini-metric">
+          <span class="roi-mini-metric-label">年間総経済効果</span>
+          <strong class="roi-mini-metric-value" data-rmini="total">1,227万円</strong>
+        </div>
+        <div class="roi-mini-metric">
+          <span class="roi-mini-metric-label">投資回収期間</span>
+          <strong class="roi-mini-metric-value" data-rmini="payback">2.9ヶ月</strong>
+        </div>
+        <div class="roi-mini-metric">
+          <span class="roi-mini-metric-label">想定ROI</span>
+          <strong class="roi-mini-metric-value" data-rmini="roi">309%</strong>
+        </div>
+      </div>
+
+      <div class="roi-mini-detail">
+        <a href="roi-simulator.html" class="roi-mini-detail-link">人件費・残業時間など細かく入力して試算する →</a>
+      </div>
+    </div>
+
+    <p class="roi-mini-disclaimer">※ベータ版・標準シナリオ（業界目安に基づくプリセット値）での概算です。実際の効果は施設の運用・症例構成・導入範囲により異なります。詳細試算には施設の実数値を入力してください。</p>
   </div>
 </section>
 
@@ -2592,6 +2714,59 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   const cta=modal.querySelector('[data-promo-cta]');
   if(cta) cta.addEventListener('click',close);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show'))close()});
+})();
+
+// ROI Mini Simulator (LP-embedded simplified version)
+(function(){
+  const ROI_SIZES={
+    xs:{shiftHours:15,assignmentHours:1,educationHours:10,overtimeHours:50,workingDays:240,hourlyCost:3000,overtimeCost:3750,preventedTurnover:0.5,turnoverCost:3000000,revenuePerHour:120000,maxAdditionalHours:15},
+    s:{shiftHours:20,assignmentHours:1.5,educationHours:15,overtimeHours:70,workingDays:240,hourlyCost:3000,overtimeCost:3750,preventedTurnover:1,turnoverCost:3000000,revenuePerHour:130000,maxAdditionalHours:18},
+    m:{shiftHours:25,assignmentHours:2,educationHours:18,overtimeHours:90,workingDays:240,hourlyCost:3000,overtimeCost:3750,preventedTurnover:1,turnoverCost:3000000,revenuePerHour:140000,maxAdditionalHours:20},
+    l:{shiftHours:30,assignmentHours:2,educationHours:20,overtimeHours:100,workingDays:240,hourlyCost:3200,overtimeCost:4000,preventedTurnover:1,turnoverCost:3000000,revenuePerHour:150000,maxAdditionalHours:22},
+    xl:{shiftHours:35,assignmentHours:2.5,educationHours:25,overtimeHours:130,workingDays:240,hourlyCost:3200,overtimeCost:4000,preventedTurnover:1.5,turnoverCost:3500000,revenuePerHour:160000,maxAdditionalHours:25},
+    xxl:{shiftHours:40,assignmentHours:3,educationHours:30,overtimeHours:160,workingDays:240,hourlyCost:3500,overtimeCost:4375,preventedTurnover:2,turnoverCost:3500000,revenuePerHour:180000,maxAdditionalHours:30}
+  };
+  const R={shiftRate:0.50,assignmentRate:0.40,overtimeRate:0.10,educationRate:0.40,conversionRate:0.20,utilizationRealizationRate:0.50};
+  const MONTHLY_FEE=250000;
+
+  function calc(p){
+    const monthlyShift=p.shiftHours*R.shiftRate;
+    const monthlyAssign=p.assignmentHours*R.assignmentRate*(p.workingDays/12);
+    const monthlyEdu=p.educationHours*R.educationRate;
+    const shiftSaving=monthlyShift*p.hourlyCost*12;
+    const assignSaving=p.assignmentHours*R.assignmentRate*p.hourlyCost*p.workingDays;
+    const overtimeSaving=p.overtimeHours*R.overtimeRate*p.overtimeCost*12;
+    const turnoverSaving=p.preventedTurnover*p.turnoverCost;
+    const eduSaving=monthlyEdu*p.hourlyCost*12;
+    const managedSaved=monthlyShift+monthlyAssign+monthlyEdu;
+    const potentialAdd=managedSaved*R.conversionRate;
+    const cappedAdd=Math.min(potentialAdd,p.maxAdditionalHours);
+    const realizedAdd=cappedAdd*R.utilizationRealizationRate;
+    const utilSaving=realizedAdd*p.revenuePerHour*12;
+    const total=shiftSaving+assignSaving+overtimeSaving+turnoverSaving+eduSaving+utilSaving;
+    const cost=MONTHLY_FEE*12;
+    const roi=cost>0?((total-cost)/cost)*100:0;
+    const payback=total>0?(cost/total)*12:null;
+    return{total,roi,payback};
+  }
+  function fmtMan(n){return Math.round(n/10000).toLocaleString('ja-JP')+'万円'}
+
+  function update(sizeKey){
+    const preset=ROI_SIZES[sizeKey];
+    if(!preset)return;
+    const r=calc(preset);
+    const setText=(k,v)=>{const el=document.querySelector('[data-rmini="'+k+'"]');if(el)el.textContent=v};
+    setText('total',fmtMan(r.total));
+    setText('payback',r.payback?r.payback.toFixed(1)+'ヶ月':'-');
+    setText('roi',Math.round(r.roi).toLocaleString('ja-JP')+'%');
+    document.querySelectorAll('[data-rmini-size]').forEach(b=>{
+      b.classList.toggle('is-active',b.getAttribute('data-rmini-size')===sizeKey);
+    });
+  }
+  document.querySelectorAll('[data-rmini-size]').forEach(btn=>{
+    btn.addEventListener('click',()=>update(btn.getAttribute('data-rmini-size')));
+  });
+  update('m');
 })();
 </script>
 <script src="analytics.js" defer></script>
