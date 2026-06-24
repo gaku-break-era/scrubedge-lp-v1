@@ -1498,6 +1498,123 @@ section{padding:100px 0;position:relative}
 .pagetop.show{opacity:1;visibility:visible}
 .pagetop:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(13,110,122,.4)}
 @media(max-width:768px){.pagetop{bottom:90px;right:16px;width:44px;height:44px}}
+
+/* ===== Promo Modal ===== */
+.promo-modal{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;visibility:hidden;
+  transition:opacity .3s ease, visibility .3s ease;
+}
+.promo-modal.show{opacity:1;visibility:visible}
+.promo-modal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(15,42,71,.55);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.promo-modal-content{
+  position:relative;z-index:1;
+  background:#fff;
+  border-radius:24px;
+  max-width:520px;width:100%;
+  padding:44px 40px 32px;
+  box-shadow:0 30px 80px rgba(15,42,71,.3);
+  transform:translateY(20px) scale(.96);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  max-height:calc(100vh - 40px);overflow-y:auto;
+}
+.promo-modal.show .promo-modal-content{transform:translateY(0) scale(1)}
+.promo-modal-close{
+  position:absolute;top:14px;right:14px;
+  width:36px;height:36px;border-radius:50%;
+  background:#f0f4f8;color:var(--text-sub);
+  font-size:22px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:none;
+  transition:all .2s ease;
+}
+.promo-modal-close:hover{background:var(--text);color:#fff}
+.promo-badge{
+  display:inline-block;
+  padding:6px 16px;border-radius:999px;
+  background:linear-gradient(135deg,#ff6b6b,#ff9966);
+  color:#fff;font-size:12px;font-weight:800;letter-spacing:.1em;
+  margin-bottom:18px;
+}
+.promo-title{
+  font-size:30px;font-weight:800;color:var(--navy);
+  line-height:1.35;margin-bottom:8px;letter-spacing:-.01em;
+}
+.promo-title em{
+  font-style:normal;
+  background:linear-gradient(120deg,var(--teal),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.promo-subtitle{
+  font-size:14px;color:var(--text-sub);font-weight:600;margin-bottom:24px;
+}
+.promo-highlight{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin-bottom:22px;
+}
+.promo-highlight-item{
+  background:linear-gradient(135deg,#eef4fb,#e6eef7);
+  border:1px solid rgba(37,99,235,.15);
+  border-radius:14px;
+  padding:16px 12px;
+  text-align:center;
+  font-size:13px;font-weight:600;color:var(--text-sub);
+  line-height:1.4;
+}
+.promo-highlight-item strong{
+  display:block;
+  font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,var(--navy),var(--primary));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:4px;
+}
+.promo-conditions{
+  list-style:none;
+  background:rgba(255,107,107,.06);
+  border-left:3px solid #ff6b6b;
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;
+  margin-bottom:22px;
+}
+.promo-conditions li{
+  position:relative;padding-left:20px;
+  font-size:13.5px;color:var(--text);font-weight:600;line-height:1.7;
+}
+.promo-conditions li::before{
+  content:"●";position:absolute;left:0;top:0;
+  color:#ff6b6b;font-size:10px;line-height:1.9;
+}
+.promo-conditions li strong{color:#e85a5a;font-weight:800}
+.promo-cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:16px 28px;border-radius:999px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+  color:#fff;font-weight:700;font-size:15px;
+  box-shadow:0 10px 30px rgba(37,99,235,.35);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  margin-bottom:18px;
+}
+.promo-cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(37,99,235,.45)}
+.promo-notes{
+  font-size:11px;color:var(--text-sub);line-height:1.7;
+  border-top:1px dashed var(--border);padding-top:14px;
+}
+@media(max-width:560px){
+  .promo-modal{padding:12px}
+  .promo-modal-content{padding:36px 22px 22px;border-radius:18px}
+  .promo-title{font-size:24px}
+  .promo-highlight-item{padding:12px 8px;font-size:12px}
+  .promo-highlight-item strong{font-size:18px}
+  .promo-conditions li{font-size:12.5px}
+  .promo-cta{font-size:14px;padding:14px 22px}
+  .promo-notes{font-size:10.5px}
+}
 </style>
 </head>
 <body>
@@ -1802,7 +1919,7 @@ section{padding:100px 0;position:relative}
         <div class="kpi-arrow">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </div>
-        <div class="kpi-after"><span class="kpi-num">5</span>時間以下に</div>
+        <div class="kpi-after"><span class="kpi-num">3</span>時間以下に</div>
         <div class="kpi-note">約80〜90%削減</div>
       </div>
 
@@ -1811,11 +1928,11 @@ section{padding:100px 0;position:relative}
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
         <div class="kpi-label">配置検討・調整時間</div>
-        <div class="kpi-before">月10時間</div>
+        <div class="kpi-before">月240時間</div>
         <div class="kpi-arrow">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </div>
-        <div class="kpi-after"><span class="kpi-num">2</span>時間以下に</div>
+        <div class="kpi-after"><span class="kpi-num">25</span>時間以下に</div>
         <div class="kpi-note">約80%削減</div>
       </div>
 
@@ -2307,6 +2424,30 @@ section{padding:100px 0;position:relative}
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
 </a>
 
+<!-- Promo Modal -->
+<div class="promo-modal" id="promoModal" role="dialog" aria-modal="true" aria-labelledby="promoTitle" aria-hidden="true">
+  <div class="promo-modal-backdrop" data-promo-close></div>
+  <div class="promo-modal-content">
+    <button type="button" class="promo-modal-close" data-promo-close aria-label="閉じる">×</button>
+    <span class="promo-badge">期間限定キャンペーン</span>
+    <h2 id="promoTitle" class="promo-title">テストモニター<br><em>大募集</em></h2>
+    <p class="promo-subtitle">先着50施設限定・2026年12月までのお申込みに限り</p>
+    <div class="promo-highlight">
+      <div class="promo-highlight-item"><strong>1年間</strong>利用料無料</div>
+      <div class="promo-highlight-item"><strong>0円</strong>初期導入費</div>
+    </div>
+    <ul class="promo-conditions">
+      <li>2026年12月までにお申込みの方限定</li>
+      <li>先着 <strong>50施設</strong> 限定</li>
+    </ul>
+    <a href="#contact" class="promo-cta" data-promo-cta>無料でデモ相談する →</a>
+    <p class="promo-notes">
+      ※ 利用料無料となる1年間は、最初にログインができるようになった日から起算して365日後までです。以降は通常料金が発生します。<br>
+      ※ 経営上の理由により、50施設に達する前に募集を終了する場合があります。
+    </p>
+  </div>
+</div>
+
 <script>
 // FAQ accordion
 document.querySelectorAll('.faq-q').forEach(btn=>{
@@ -2368,6 +2509,35 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     }
   });
 });
+
+// Promo Modal
+(function(){
+  const modal=document.getElementById('promoModal');
+  if(!modal) return;
+  const STORAGE_KEY='scrubedge_promo_dismissed';
+  const COOLDOWN_DAYS=7;
+  const SHOW_DELAY_MS=2000;
+  const now=Date.now();
+  const dismissed=Number(localStorage.getItem(STORAGE_KEY)||0);
+  if(dismissed && now-dismissed < COOLDOWN_DAYS*86400000) return;
+
+  function open(){
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+    localStorage.setItem(STORAGE_KEY,String(Date.now()));
+  }
+  setTimeout(open,SHOW_DELAY_MS);
+  modal.querySelectorAll('[data-promo-close]').forEach(el=>el.addEventListener('click',close));
+  const cta=modal.querySelector('[data-promo-cta]');
+  if(cta) cta.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show'))close()});
+})();
 </script>
 </body>
 </html>
