@@ -2687,21 +2687,25 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   });
 });
 
-// Promo Modal
+// Promo Modal (scroll-triggered at ~50% page depth)
 (function(){
   const modal=document.getElementById('promoModal');
   if(!modal) return;
   const STORAGE_KEY='scrubedge_promo_dismissed';
   const COOLDOWN_DAYS=7;
-  const SHOW_DELAY_MS=2000;
+  const TRIGGER_RATIO=0.5; // 50% scroll
   const now=Date.now();
   const dismissed=Number(localStorage.getItem(STORAGE_KEY)||0);
   if(dismissed && now-dismissed < COOLDOWN_DAYS*86400000) return;
 
+  let opened=false;
   function open(){
+    if(opened) return;
+    opened=true;
     modal.classList.add('show');
     modal.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
+    window.removeEventListener('scroll',onScroll);
   }
   function close(){
     modal.classList.remove('show');
@@ -2709,7 +2713,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     document.body.style.overflow='';
     localStorage.setItem(STORAGE_KEY,String(Date.now()));
   }
-  setTimeout(open,SHOW_DELAY_MS);
+  function onScroll(){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    if(max<=0) return;
+    if(window.scrollY/max>=TRIGGER_RATIO) open();
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
   modal.querySelectorAll('[data-promo-close]').forEach(el=>el.addEventListener('click',close));
   const cta=modal.querySelector('[data-promo-cta]');
   if(cta) cta.addEventListener('click',close);
