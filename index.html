@@ -1629,7 +1629,7 @@ html.intro-active .intro{
     radial-gradient(ellipse 100% 80% at 50% 50%, #1a3068 0%, #0f1f48 55%, #060d24 100%);
   align-items:center;justify-content:center;
   overflow:hidden;
-  animation:intro-fadeout .7s cubic-bezier(.7,0,.84,0) 3.3s forwards;
+  animation:intro-fadeout .9s cubic-bezier(.7,0,.84,0) 5.5s forwards;
 }
 html.intro-active body{overflow:hidden}
 @keyframes intro-fadeout{
@@ -2909,8 +2909,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   document.addEventListener('keydown',function(e){
     if((e.key==='Escape'||e.key==='Enter')&&document.documentElement.classList.contains('intro-active')) skip();
   });
-  // auto-remove after full animation (CSS fadeout starts at 3.3s + .7s = 4.0s)
-  setTimeout(teardown,4200);
+  // auto-remove after full animation (CSS fadeout starts at 5.5s + .9s = 6.4s)
+  setTimeout(teardown,6600);
 })();
 
 // ROI Mini Simulator (LP-embedded simplified version)
