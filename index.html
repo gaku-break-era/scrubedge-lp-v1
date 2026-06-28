@@ -44,10 +44,10 @@
 }
 </script>
 <script>
-/* Intro splash gate: only mark first-visit before render to avoid flash for returners */
+/* Intro splash gate: per-session (shown once per tab session, skipped on in-site nav) */
 (function(){
   try{
-    var seen = localStorage.getItem('scrubedge_intro_seen');
+    var seen = sessionStorage.getItem('scrubedge_intro_seen');
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(!seen && !reduce){
       document.documentElement.classList.add('intro-active');
@@ -1683,6 +1683,8 @@ html.intro-active body{overflow:hidden}
 .intro-brand{
   position:relative;z-index:1;
   text-align:center;
+  padding:0 24px;
+  max-width:100%;
   opacity:0;
   animation:intro-brand 1.2s cubic-bezier(.16,1,.3,1) 1.9s forwards;
 }
@@ -1731,7 +1733,15 @@ html.intro-active body{overflow:hidden}
 }
 @media(max-width:560px){
   .intro-skip{top:16px;right:16px;padding:7px 14px;font-size:10.5px}
-  .intro-tagline{letter-spacing:.1em}
+  .intro-logo{font-size:clamp(36px,12vw,56px);margin-bottom:18px}
+  .intro-divider{width:42px;margin-bottom:16px}
+  .intro-tagline{letter-spacing:.08em;line-height:1.7}
+  .intro-network{opacity:.55}
+}
+@media(max-width:380px){
+  .intro-brand{padding:0 16px}
+  .intro-logo{font-size:34px}
+  .intro-tagline{letter-spacing:.04em;font-size:11.5px}
 }
 @media(prefers-reduced-motion:reduce){
   html.intro-active .intro{display:none}
@@ -1859,7 +1869,7 @@ html.intro-active body{overflow:hidden}
 
 <!-- Intro Splash (first visit only) -->
 <div class="intro" id="intro" aria-hidden="true">
-  <svg class="intro-network" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <svg class="intro-network" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <!-- Connection lines (drawn after nodes appear) -->
     <line x1="180" y1="160" x2="500" y2="90"  style="animation-delay:1.05s"/>
     <line x1="500" y1="90"  x2="820" y2="180" style="animation-delay:1.15s"/>
@@ -2892,7 +2902,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   if(!document.documentElement.classList.contains('intro-active')) return;
   var intro=document.getElementById('intro');
   if(!intro){ document.documentElement.classList.remove('intro-active'); return; }
-  try{ localStorage.setItem('scrubedge_intro_seen','1'); }catch(e){}
+  try{ sessionStorage.setItem('scrubedge_intro_seen','1'); }catch(e){}
 
   function teardown(){
     document.documentElement.classList.remove('intro-active');
